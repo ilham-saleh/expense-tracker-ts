@@ -10,12 +10,13 @@ import data from "./data.ts";
 function App() {
   const [expenses, setExpenses] = useState(data);
 
+  const handleDelete = (id: number) => {
+    setExpenses(expenses.filter((expense) => expense.id !== id));
+  };
+
   return (
     <div>
-      <ExpenseList
-        expenses={expenses}
-        onDelete={() => console.log("deleted")}
-      />
+      <ExpenseList expenses={expenses} onDelete={(id) => handleDelete(id)} />
     </div>
   );
 }
