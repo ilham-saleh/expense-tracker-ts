@@ -4,8 +4,9 @@ import { useState } from "react";
 // CSS
 import "./App.css";
 
-import ExpenseList from "./components/ExpenseList/ExpenseList.tsx";
+import ExpenseList from "./components/ExpenseList.tsx";
 import data from "./data.ts";
+import ExpenseFilter from "./components/ExpenseFilter.tsx";
 
 function App() {
   const [expenses, setExpenses] = useState(data);
@@ -16,6 +17,7 @@ function App() {
 
   return (
     <div>
+      <ExpenseFilter />
       <ExpenseList expenses={expenses} onDelete={(id) => handleDelete(id)} />
     </div>
   );
