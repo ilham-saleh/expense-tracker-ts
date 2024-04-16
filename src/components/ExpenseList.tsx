@@ -12,7 +12,7 @@ interface Props {
 
 const ExpenseList = ({ expenses, onDelete }: Props) => {
   return (
-    <div>
+    <div className="mb-3">
       <table className="table table-border">
         <thead>
           <tr>

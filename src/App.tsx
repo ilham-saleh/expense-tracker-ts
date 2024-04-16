@@ -7,6 +7,9 @@ import "./App.css";
 import ExpenseList from "./components/ExpenseList.tsx";
 import data from "./data.ts";
 import ExpenseFilter from "./components/ExpenseFilter.tsx";
+import ExpenseForm from "./components/ExpenseForm.tsx";
+
+export const categories = ["Utilities", "Entertainment", "Grocery"];
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -20,14 +23,13 @@ function App() {
     selectedCategory ? expense.category === selectedCategory : expenses
   );
   return (
-    <div>
-      <div className="mb-3">
-        <ExpenseFilter onSelect={(category) => setSelectedCategory(category)} />
-        <ExpenseList
-          expenses={filteredList}
-          onDelete={(id) => handleDelete(id)}
-        />
-      </div>
+    <div className="px-5 mt-3">
+      <ExpenseForm />
+      <ExpenseFilter onSelect={(category) => setSelectedCategory(category)} />
+      <ExpenseList
+        expenses={filteredList}
+        onDelete={(id) => handleDelete(id)}
+      />
     </div>
   );
 }
