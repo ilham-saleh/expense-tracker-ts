@@ -1,20 +1,27 @@
-import { FormEvent, useState } from "react";
+import React, { useState, FormEvent } from "react";
 import { categories } from "../App";
+import { Expense } from "../props";
 
-// interface FormData {
-//   description: string;
-//   amount: number;
-//   category: string;
-// }
+interface FormData {
+  description: string;
+  amount: number;
+  category: string;
+}
 
-// interface Props {
-//   onFormSubmit: (FormData: {}) => void;
-// }
+interface Props {
+  onSubmit: (data: Expense) => void;
+}
 
-const ExpenseForm = () => {
-  const [formData, setFormData] = useState({
+const ExpenseForm = ({ onSubmit }: Props) => {
+  const [formData, setFormData] = useState<FormData>({
     description: "",
     amount: 0,
+    category: "",
+  });
+
+  const [errors, setErrors] = useState({
+    description: "",
+    amount: "",
     category: "",
   });
 
@@ -26,13 +33,60 @@ const ExpenseForm = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
-    console.log(formData); // Pass form data to the parent component
+
+    // Reset error messages
+    setErrors({
+      description: "",
+      amount: "",
+      category: "",
+    });
+
+    // Validation checks
+    let isValid = true;
+
+    if (formData.description.trim().length < 3) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        description: "Description must be at least 3 characters long.",
+      }));
+      isValid = false;
+    }
+
+    if (formData.amount <= 0) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        amount: "Amount must be greater than 0.",
+      }));
+      isValid = false;
+    }
+
+    if (formData.category.trim().length === 0) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        category: "Please select a category.",
+      }));
+      isValid = false;
+    }
+
+    if (isValid) {
+      // Generate a unique id for the new expense
+      const id = new Date().getTime();
+
+      // Pass the new expense data to the parent component
+      onSubmit({ id, ...formData });
+
+      // Reset the form data state to its initial values
+      setFormData({
+        description: "",
+        amount: 0,
+        category: "",
+      });
+    }
   };
 
-  console.log(formData);
   return (
     <div className="mb-3">
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="description" className="form-label">
             Description
@@ -45,6 +99,9 @@ const ExpenseForm = () => {
             className="form-control"
             value={formData.description}
           />
+          {errors.description && (
+            <div className="text-danger">{errors.description}</div>
+          )}
         </div>
 
         <div className="mb-3">
@@ -59,6 +116,7 @@ const ExpenseForm = () => {
             className="form-control"
             value={formData.amount}
           />
+          {errors.amount && <div className="text-danger">{errors.amount}</div>}
         </div>
 
         <div className="mb-3">
@@ -79,6 +137,9 @@ const ExpenseForm = () => {
               </option>
             ))}
           </select>
+          {errors.category && (
+            <div className="text-danger">{errors.category}</div>
+          )}
         </div>
 
         <button className="btn btn-primary mb-5">Submit</button>
